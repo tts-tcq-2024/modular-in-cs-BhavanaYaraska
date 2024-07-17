@@ -10,7 +10,6 @@ namespace TelCo.ColorCoder
             ValidateAbnormalPairNumber(26);
             ValidateAbnormalColors(new ColorPair(System.Drawing.Color.Pink, System.Drawing.Color.Blue));
         }
-
         private static void ValidateAbnormalPairNumber(int pairNumber)
         {
             try
@@ -22,7 +21,6 @@ namespace TelCo.ColorCoder
                 Console.WriteLine(ex.Message);
             }
         }
-
         private static void ValidateAbnormalColors(ColorPair pair)
         {
             try
