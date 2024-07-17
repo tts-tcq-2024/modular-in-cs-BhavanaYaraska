@@ -1,4 +1,9 @@
- public class ColorPair
+using System;
+using System.Drawing;
+
+namespace TelCo.ColorCoder
+{
+public class ColorPair
     {
         public Color MajorColor { get; }
         public Color MinorColor { get; }
