@@ -7,65 +7,59 @@ namespace TelCo.ColorCoder
     {
         static void Main(string[] args)
         {
-            TestColorCoding();
+            TestColorMapping();
             TestAbnormalValues();
         }
 
-        private static void TestColorCoding()
+        private static void TestColorMapping()
         {
-            int pairNumber = 4;
-            ColorPair testPair1 = ColorMap.GetColorFromPairNumber(pairNumber);
-            Console.WriteLine("[In]Pair Number: {0},[Out] Colors: {1}\n", pairNumber, testPair1);
-            Debug.Assert(testPair1.MajorColor == Color.White);
-            Debug.Assert(testPair1.MinorColor == Color.Brown);
+            ValidateColorMapping(4, Color.White, Color.Brown);
+            ValidateColorMapping(5, Color.White, Color.SlateGray);
+            ValidateColorMapping(23, Color.Violet, Color.Green);
+            ValidatePairNumberMapping(Color.Yellow, Color.Green, 18);
+            ValidatePairNumberMapping(Color.Red, Color.Blue, 6);
+        }
 
-            pairNumber = 5;
-            testPair1 = ColorMap.GetColorFromPairNumber(pairNumber);
-            Console.WriteLine("[In]Pair Number: {0},[Out] Colors: {1}\n", pairNumber, testPair1);
-            Debug.Assert(testPair1.MajorColor == Color.White);
-            Debug.Assert(testPair1.MinorColor == Color.SlateGray);
+        private static void ValidateColorMapping(int pairNumber, Color expectedMajor, Color expectedMinor)
+        {
+            ColorPair colorPair = ColorMap.GetColorFromPairNumber(pairNumber);
+            Console.WriteLine("[In]Pair Number: {0},[Out] Colors: {1}\n", pairNumber, colorPair);
+            Debug.Assert(colorPair.MajorColor == expectedMajor);
+            Debug.Assert(colorPair.MinorColor == expectedMinor);
+        }
 
-            pairNumber = 23;
-            testPair1 = ColorMap.GetColorFromPairNumber(pairNumber);
-            Console.WriteLine("[In]Pair Number: {0},[Out] Colors: {1}\n", pairNumber, testPair1);
-            Debug.Assert(testPair1.MajorColor == Color.Violet);
-            Debug.Assert(testPair1.MinorColor == Color.Green);
-
-            ColorPair testPair2 = new ColorPair() { MajorColor = Color.Yellow, MinorColor = Color.Green };
-            pairNumber = ColorMap.GetPairNumberFromColor(testPair2);
-            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}\n", testPair2, pairNumber);
-            Debug.Assert(pairNumber == 18);
-
-            testPair2 = new ColorPair() { MajorColor = Color.Red, MinorColor = Color.Blue };
-            pairNumber = ColorMap.GetPairNumberFromColor(testPair2);
-            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}", testPair2, pairNumber);
-            Debug.Assert(pairNumber == 6);
+        private static void ValidatePairNumberMapping(Color majorColor, Color minorColor, int expectedPairNumber)
+        {
+            ColorPair colorPair = new ColorPair(majorColor, minorColor);
+            int pairNumber = ColorMap.GetPairNumberFromColor(colorPair);
+            Console.WriteLine("[In]Colors: {0}, [Out] PairNumber: {1}\n", colorPair, pairNumber);
+            Debug.Assert(pairNumber == expectedPairNumber);
         }
 
         private static void TestAbnormalValues()
         {
+            ValidateAbnormalPairNumber(0);
+            ValidateAbnormalPairNumber(26);
+            ValidateAbnormalColors(new ColorPair(Color.Pink, Color.Blue));
+        }
+
+        private static void ValidateAbnormalPairNumber(int pairNumber)
+        {
             try
             {
-                ColorMap.GetColorFromPairNumber(0);
+                ColorMap.GetColorFromPairNumber(pairNumber);
             }
             catch (ArgumentOutOfRangeException ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
 
+        private static void ValidateAbnormalColors(ColorPair pair)
+        {
             try
             {
-                ColorMap.GetColorFromPairNumber(26);
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            try
-            {
-                ColorPair unknownPair = new ColorPair() { MajorColor = Color.Pink, MinorColor = Color.Blue };
-                ColorMap.GetPairNumberFromColor(unknownPair);
+                ColorMap.GetPairNumberFromColor(pair);
             }
             catch (ArgumentException ex)
             {
