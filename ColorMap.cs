@@ -3,27 +3,29 @@ using System.Drawing;
 
 namespace TelCo.ColorCoder
 {
-    /// <summary>
-    /// Handles color mapping and related functionalities
-    /// </summary>
     public static class ColorMap
     {
-        private static readonly Color[] colorMapMajor;
-        private static readonly Color[] colorMapMinor;
+        private static Color[] colorMapMajor;
+        private static Color[] colorMapMinor;
 
         static ColorMap()
         {
-            colorMapMajor = new Color[] { Color.White, Color.Red, Color.Black, Color.Yellow, Color.Violet };
-            colorMapMinor = new Color[] { Color.Blue, Color.Orange, Color.Green, Color.Brown, Color.SlateGray };
+            ColorMapInitializer.Initialize(out colorMapMajor, out colorMapMinor);
         }
 
         public static ColorPair GetColorFromPairNumber(int pairNumber)
         {
-            ValidatePairNumber(pairNumber);
-
+            int minorSize = colorMapMinor.Length;
+            int majorSize = colorMapMajor.Length;
+            if (pairNumber < 1 || pairNumber > minorSize * majorSize)
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"Argument PairNumber:{pairNumber} is outside the allowed range");
+            }
+            
             int zeroBasedPairNumber = pairNumber - 1;
-            int majorIndex = zeroBasedPairNumber / colorMapMinor.Length;
-            int minorIndex = zeroBasedPairNumber % colorMapMinor.Length;
+            int majorIndex = zeroBasedPairNumber / minorSize;
+            int minorIndex = zeroBasedPairNumber % minorSize;
 
             return new ColorPair(colorMapMajor[majorIndex], colorMapMinor[minorIndex]);
         }
@@ -39,15 +41,6 @@ namespace TelCo.ColorCoder
             }
 
             return (majorIndex * colorMapMinor.Length) + (minorIndex + 1);
-        }
-
-        private static void ValidatePairNumber(int pairNumber)
-        {
-            int maxPairNumber = colorMapMajor.Length * colorMapMinor.Length;
-            if (pairNumber < 1 || pairNumber > maxPairNumber)
-            {
-                throw new ArgumentOutOfRangeException($"Argument PairNumber:{pairNumber} is outside the allowed range");
-            }
         }
     }
 
