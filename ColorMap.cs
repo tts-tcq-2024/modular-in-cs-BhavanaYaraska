@@ -12,7 +12,6 @@ namespace TelCo.ColorCoder
         {
             ColorMapInitializer.Initialize(out colorMapMajor, out colorMapMinor);
         }
-
         public static ColorPair GetColorFromPairNumber(int pairNumber)
         {
             int minorSize = colorMapMinor.Length;
