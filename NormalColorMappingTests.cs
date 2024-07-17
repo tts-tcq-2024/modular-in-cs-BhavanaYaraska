@@ -14,7 +14,6 @@ namespace TelCo.ColorCoder
             ValidatePairNumberMapping(Color.Yellow, Color.Green, 18);
             ValidatePairNumberMapping(Color.Red, Color.Blue, 6);
         }
-
         private static void ValidateColorMapping(int pairNumber, Color expectedMajor, Color expectedMinor)
         {
             ColorPair colorPair = ColorMap.GetColorFromPairNumber(pairNumber);
