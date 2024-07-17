@@ -6,7 +6,7 @@ namespace TelCo.ColorCoder
     /// <summary>
     /// Handles color mapping and related functionalities
     /// </summary>
-    public class ColorMap
+    public static class ColorMap
     {
         private static readonly Color[] colorMapMajor;
         private static readonly Color[] colorMapMinor;
@@ -19,18 +19,13 @@ namespace TelCo.ColorCoder
 
         public static ColorPair GetColorFromPairNumber(int pairNumber)
         {
-            int minorSize = colorMapMinor.Length;
-            int majorSize = colorMapMajor.Length;
-            if (pairNumber < 1 || pairNumber > minorSize * majorSize)
-            {
-                throw new ArgumentOutOfRangeException($"Argument PairNumber:{pairNumber} is outside the allowed range");
-            }
+            ValidatePairNumber(pairNumber);
 
             int zeroBasedPairNumber = pairNumber - 1;
-            int majorIndex = zeroBasedPairNumber / minorSize;
-            int minorIndex = zeroBasedPairNumber % minorSize;
+            int majorIndex = zeroBasedPairNumber / colorMapMinor.Length;
+            int minorIndex = zeroBasedPairNumber % colorMapMinor.Length;
 
-            return new ColorPair() { MajorColor = colorMapMajor[majorIndex], MinorColor = colorMapMinor[minorIndex] };
+            return new ColorPair(colorMapMajor[majorIndex], colorMapMinor[minorIndex]);
         }
 
         public static int GetPairNumberFromColor(ColorPair pair)
@@ -45,12 +40,27 @@ namespace TelCo.ColorCoder
 
             return (majorIndex * colorMapMinor.Length) + (minorIndex + 1);
         }
+
+        private static void ValidatePairNumber(int pairNumber)
+        {
+            int maxPairNumber = colorMapMajor.Length * colorMapMinor.Length;
+            if (pairNumber < 1 || pairNumber > maxPairNumber)
+            {
+                throw new ArgumentOutOfRangeException($"Argument PairNumber:{pairNumber} is outside the allowed range");
+            }
+        }
     }
 
     public class ColorPair
     {
-        public Color MajorColor { get; set; }
-        public Color MinorColor { get; set; }
+        public Color MajorColor { get; }
+        public Color MinorColor { get; }
+
+        public ColorPair(Color majorColor, Color minorColor)
+        {
+            MajorColor = majorColor;
+            MinorColor = minorColor;
+        }
 
         public override string ToString()
         {
