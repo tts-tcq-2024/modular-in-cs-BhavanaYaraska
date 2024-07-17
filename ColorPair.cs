@@ -19,3 +19,4 @@ public class ColorPair
             return $"MajorColor:{MajorColor.Name}, MinorColor:{MinorColor.Name}";
         }
     }
+}
